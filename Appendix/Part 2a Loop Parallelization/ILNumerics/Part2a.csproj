@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <ValuesFile>$(OutputPath)values.csv</ValuesFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ILNumerics.Computing" Version="7.2.38" />
+    <PackageReference Include="ILNumerics.Drawing" Version="7.2.38" />
+    <PackageReference Include="ILNumerics.IO.HDF5" Version="7.2.38" />
+  </ItemGroup>
+
+  <Target BeforeTargets="Compile" Name="ResetOnChange" Inputs="@(Compile);$(MSBuildProjectFile)" Outputs="$(ValuesFile)">
+    <Delete Files="$(ValuesFile)" />
+  </Target>
+</Project>

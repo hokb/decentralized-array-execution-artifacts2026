@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="delete.cs" />
+    <Compile Remove="Part3_H5Attempt.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ILNumerics.Computing" Version="7.2.38" />
+    <PackageReference Include="ILNumerics.Drawing" Version="7.2.38" />
+    <PackageReference Include="ILNumerics.IO.HDF5" Version="7.2.38" />
+    <PackageReference Include="ILNumerics.IO.HDF5.Native" Version="7.2.38" />
+  </ItemGroup>
+
+</Project>

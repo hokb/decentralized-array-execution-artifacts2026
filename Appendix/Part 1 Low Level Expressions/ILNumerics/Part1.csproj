@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Configurations>Debug;Release;ProjectReferences_DEBUG</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup Condition="!$(Configuration.StartsWith('Project')) ">
+    <PackageReference Include="ILNumerics.Computing" Version="7.2.41" />
+    <PackageReference Include="ILNumerics.Drawing" Version="7.2.41" /> 
+  </ItemGroup>
+
+  <ItemGroup Condition="$(Configuration.StartsWith('Project')) ">
+    <ProjectReference Include="..\..\..\..\..\..\..\ILNumerics-dev\Version6\ILNumerics.Computing\src\ILNumerics.Computing.csproj" />
+    <ProjectReference Include="..\..\..\..\..\..\..\ILNumerics-dev\Version6\ILNumerics.Drawing\src\ILNumerics.Drawing.csproj" />
+  </ItemGroup>
+
+</Project>

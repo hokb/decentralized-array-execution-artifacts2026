@@ -1,0 +1,3 @@
+#!/bin/bash
+gfortran -O3 Part1.f90 -o Part1_F90_optim -cpp  
+gfortran -O0 Part1.f90 -o Part1_F90_nooptim -cpp  

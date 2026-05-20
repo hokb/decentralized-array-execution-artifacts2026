@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35806.99 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Part3_noopt", "Part3_noopt\Part3_noopt.pyproj", "{77B04BE9-BF84-472D-AB03-91134C099538}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Part3_opt", "Part3_opt\Part3_opt.pyproj", "{CAD4F0E5-188D-4D00-A8F4-262E7172C0CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77B04BE9-BF84-472D-AB03-91134C099538}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77B04BE9-BF84-472D-AB03-91134C099538}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAD4F0E5-188D-4D00-A8F4-262E7172C0CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAD4F0E5-188D-4D00-A8F4-262E7172C0CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CA5E659F-A64F-45E4-8513-45450C614AC8}
+	EndGlobalSection
+EndGlobal

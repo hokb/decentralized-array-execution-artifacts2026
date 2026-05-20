@@ -1,0 +1,8 @@
+{
+  "solution": {
+    "path": "..\\Appendices_AllParts.sln",
+    "projects": [
+      "Part 3 KMeans\\FORTRAN\\Part3_KMeans\\Part3_KMeans.vfproj"
+    ]
+  }
+}
