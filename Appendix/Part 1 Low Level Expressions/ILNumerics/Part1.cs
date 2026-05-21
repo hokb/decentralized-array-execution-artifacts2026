@@ -3,11 +3,12 @@ using ILNumerics.Drawing;
 using ILNumerics.Drawing.Plotting;
 using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using static ILNumerics.Globals;
 using static ILNumerics.ILMath;
 //ILN(enabled = false)          // disable the VP Accelerator for now. It will be selectively enabled below.
 
-const string measureDir = "measure";
+string measureDir = Path.Combine("..","..","..","..", "result");
 var measurements = new Measurement[] { 
     new Measurement{ Name = "NumPy NoOpt", Source =  Path.Combine("..", "..", "..", "..", "numpy","Part1_noopt.py"), TimesPath = "times_numpy_noopt.txt", ResultsPath= "results_numpy_noopt.bin", Separator = "," },
     new Measurement{ Name = "NumPy Opt", Source =  Path.Combine("..", "..", "..", "..", "numpy","Part1_opt.py"), TimesPath = "times_numpy_opt.txt", ResultsPath= "results_numpy_opt.bin", Separator = "," },
@@ -33,6 +34,8 @@ if (!readMeasurements(samples)) {
     performMeasurements();
     readMeasurements(samples); 
 }
+Console.WriteLine($"Current Directory: " + Environment.CurrentDirectory);
+Console.WriteLine($"Measure Directory: " + Path.GetFullPath(measureDir));
 
 draw(samples);
  unsafe bool readMeasurements(OutCell all_samples) {
@@ -112,8 +115,27 @@ void performMeasurements() {
         }
     }
     Console.WriteLine("Segment invocations count: " + Segment.RunCount);
+    Console.WriteLine("ILNumerics Version: " + FileVersionInfo.GetVersionInfo(typeof(Array<>).Assembly.Location).FileVersion?.ToString());
+    
 }
-static unsafe void measureILN(Measurement m) {
+static string getSystemInfo() {
+    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+        return @$"{RuntimeInformation.OSDescription}: {Settings.WMIInfo.RamInstalledBytes / (1 << 30)} GB RAM, {Settings.WMIInfo.Processors[0].NumberOfCores}  cores
+{Settings.WMIInfo.Processors[0].Name}";
+    } else {
+        return @$"{RuntimeInformation.OSDescription}: {GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / (1 << 30)} GB RAM, {Environment.ProcessorCount}  cores
+{GetLinuxProcessorName()}";
+    }
+}
+static string GetLinuxProcessorName() {
+    return File.ReadLines("/proc/cpuinfo")
+        .FirstOrDefault(l => l.StartsWith("model name", StringComparison.OrdinalIgnoreCase))?
+        .Split(':', 2)[1]
+        .Trim()
+        ?? "Unknown CPU";
+}
+
+unsafe void measureILN(Measurement m) {
 
     if (m.Name.EndsWith(" OptExp")) {
         Segment.Default.SpecializeFlags = ILNumerics.Core.Segments.SpecializeFlags.BSDsAll; // <- experimental optimization feature
@@ -229,8 +251,7 @@ void draw(InCell samples) {
     var title = new Title(
 @$"\bfLow  Level  Expressions\reset  (CPU)
 Data:  [507, 10, 5, 17] uint32
-\fontsize{{-3}}System: {Settings.WMIInfo.RamInstalledBytes / (1 << 30)} GB RAM, {Settings.WMIInfo.Processors[0].NumberOfCores}  cores
-{Settings.WMIInfo.Processors[0].Name}");
+\fontsize{{-3}}System: {getSystemInfo()}");
     title.Anchor = new PointF(1, 0.5f); 
     title.Location = new PointF(.9f, .43f);
     pc.Add(title); 
@@ -246,7 +267,7 @@ Data:  [507, 10, 5, 17] uint32
     var gdi = new GDIDriver(1500, 1000);
     gdi.Scene = scene;
     gdi.Render();
-    gdi.BackBuffer.SaveBitmap(Path.Combine(measureDir, "Part1.jpg"));
+    gdi.BackBuffer.SaveBitmap(Path.Combine(measureDir, "Part1.bmp"));
 
     using var outStream = new FileStream(Path.Combine(measureDir, "Part1.svg"), FileMode.Create); 
     new SVGDriver(outStream, 1500, 1000, scene: scene).Render(); 

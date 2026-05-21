@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup Condition="!$(Configuration.StartsWith('Project')) ">
-    <PackageReference Include="ILNumerics.Computing" Version="7.2.41" />
-    <PackageReference Include="ILNumerics.Drawing" Version="7.2.41" /> 
+    <PackageReference Include="ILNumerics.Computing" Version="7.*" />
+    <PackageReference Include="ILNumerics.Drawing" Version="7.*" /> 
   </ItemGroup>
 
   <ItemGroup Condition="$(Configuration.StartsWith('Project')) ">

@@ -115,4 +115,3 @@ https://dotnet.microsoft.com/en-us/download/dotnet/8.0
 
 * Install the SDK using default settings. 
 
-* 
