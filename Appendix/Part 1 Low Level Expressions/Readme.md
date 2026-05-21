@@ -4,7 +4,9 @@ Compare execution speed of the low level expression
 
 `sum((m0 & (A << shift)) | (~m0 & B), dim: 1)`
 
-on NumPy, NumPy + Numba, and FORTRAN,  with ILNumerics Accelerator. This benchmark creates a plot, similar to this: 
+on NumPy, NumPy + Numba, and FORTRAN,  with ILNumerics Accelerator on moderately sized data. (A: `[507, 10, 5, 17]`, B: `[1, 1, 5, 17]`).
+
+This benchmark involves broadcasting, unary and binary integer operations, and a sum-reduction and creates a plot, similar to this: 
 ![Part1.svg](Part1.svg) 
 
 ## Benchmark Structure

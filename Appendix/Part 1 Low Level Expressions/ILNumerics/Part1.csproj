@@ -19,4 +19,10 @@
     <ProjectReference Include="..\..\..\..\..\..\..\ILNumerics-dev\Version6\ILNumerics.Drawing\src\ILNumerics.Drawing.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="publish\**" />
+    <EmbeddedResource Remove="publish\**" />
+    <None Remove="publish\**" />
+  </ItemGroup>
+
 </Project>

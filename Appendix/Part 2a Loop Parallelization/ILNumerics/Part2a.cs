@@ -1,18 +1,25 @@
 ﻿using ILNumerics;
-using static ILNumerics.ILMath;
-using static ILNumerics.Globals;
-using System.Diagnostics;
-using ILNumerics.Drawing.Plotting;
 using ILNumerics.Drawing;
-using System.Drawing.Imaging;
+using ILNumerics.Drawing.Plotting;
+using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.InteropServices;
+using static ILNumerics.Globals;
+using static ILNumerics.ILMath;
 
-Array<double> A = counter<double>(1.0, 1.0, 1500, 1500);
-Array<double> CS = empty<double>(1,1500);
-Array<double> CV = empty<double>(1,1500);
-Array<double> D = empty<double>(1,1500);
-Array<double> ES = empty<double>(1,1500);
-Array<double> EV = empty<double>(1,1500);
+// controls the dimension length of the test data. 
+// A will be: [matDimLen x matDimLen]
+const int matDimLen = 1500;  // Try: matDimLen = 200, reps = 500 !
+// controls the repetitions: how many invocations 
+// of the expression evaluation will be measured
+// together for each experiment? 
+const int reps = 10;         // Try: matDimLen = 200, reps = 500 !
+Array<double> A = counter<double>(1.0, 1.0, matDimLen, matDimLen); 
+Array<double> CS = empty<double>(1,matDimLen);
+Array<double> CV = empty<double>(1, matDimLen);
+Array<double> D = empty<double>(1, matDimLen);
+Array<double> ES = empty<double>(1, matDimLen);
+Array<double> EV = empty<double>(1, matDimLen);
 
 const string PartName = "Part2a";
 
@@ -41,7 +48,7 @@ void workload_ILN_Vect_VP() {
     EV = sum(abs(sin(A)), dim: 0);
 }
 //ILN(enabled = false)
-double run(Action func, int rep = 10, Func<BaseArray> awaitable = null) { 
+double run(Action func, int rep = reps, Func<BaseArray> awaitable = null) {  
 
     var sw = Stopwatch.StartNew();
     for (int i = 0; i < rep; i++) {
@@ -70,9 +77,9 @@ if (!File.Exists("values.csv")) {
         File.AppendAllText("values.csv", $"{(DateTime.Now - start).TotalMilliseconds}, {spent_ILN_seq}, {spent_ILN_vect}, {spent_ParFor}, {spent_ILN_Seq_VP}, {spent_ILN_Vect_VP}\r\n");
         Console.WriteLine();
     }
-
 }
-draw(); 
+draw();
+
 void check(double err) {
     if (err < 3 * eps * A.S[0] * maxall(A)) {
         Console.Write("(correct: True) ");
@@ -88,7 +95,7 @@ void check(double err) {
 void draw() {
     Array<double> times = csvread<double>(File.ReadAllText("values.csv"));
 
-    var allLabelFonts = new Font("Linux Libertine", 18.0f);
+    var allLabelFonts = new Font("Linux Libertine", 14.0f);
     Label.DefaultFont = allLabelFonts;
 
     var scene = new Scene {
@@ -145,14 +152,13 @@ void draw() {
         }
     }
 
-    var sysInfo = @$"\fontsize{{-3}}System: {Settings.WMIInfo.RamInstalledBytes / (1 << 30)} GB RAM, {Settings.WMIInfo.Processors[0].NumberOfCores}  cores
-{Settings.WMIInfo.Processors[0].Name}";
+    var sysInfo = @$"\fontsize{{-3}}System: {getSystemInfo()}";
 
     var title = pc.Add(new Title(
 @$"\bfIndependent Loop Iterations\reset
 Parallel.For vers. ILNumerics VP
-\reset
-B[i] = sum(abs(sin(A[full,  i])), dim: 0)
+\resetB[i] = sum(abs(sin(A[full,  i])), dim: 0)
+A -> [{A.S[0]},{A.S[1]}], Rep: {reps}
 " + sysInfo));
     title.Location = new PointF(.2f, .3f);
     title.Anchor = new PointF(0, 0.5f);
@@ -166,9 +172,27 @@ B[i] = sum(abs(sin(A[full,  i])), dim: 0)
     var gdi = new GDIDriver(1500, 1000);
     gdi.Scene = scene;
     gdi.Render();
-    gdi.BackBuffer.Bitmap.Save($"{PartName}.jpg", ImageFormat.Jpeg);
+    gdi.BackBuffer.SaveBitmap($"{PartName}.bmp");
 
     using var outStream = new FileStream($"{PartName}.svg", FileMode.Create);
     new SVGDriver(outStream, 1500, 1000, scene: scene).Render();
 
 }
+
+static string getSystemInfo() {
+    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+        return @$"{RuntimeInformation.OSDescription}: {Settings.WMIInfo.RamInstalledBytes / (1 << 30)} GB RAM, {Settings.WMIInfo.Processors[0].NumberOfCores}  cores
+{Settings.WMIInfo.Processors[0].Name}";
+    } else {
+        return @$"{RuntimeInformation.OSDescription}: {GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / (1 << 30)} GB RAM, {Environment.ProcessorCount}  cores
+{GetLinuxProcessorName()}";
+    }
+}
+static string GetLinuxProcessorName() {
+    return File.ReadLines("/proc/cpuinfo")
+        .FirstOrDefault(l => l.StartsWith("model name", StringComparison.OrdinalIgnoreCase))?
+        .Split(':', 2)[1]
+        .Trim()
+        ?? "Unknown CPU";
+}
+
