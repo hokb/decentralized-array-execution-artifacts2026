@@ -4,10 +4,13 @@ Compare execution speed of the low level expression
 
 `sum((m0 & (A << shift)) | (~m0 & B), dim: 1)`
 
-on NumPy, NumPy + Numba, and FORTRAN,  with ILNumerics Accelerator on moderately sized data. (A: `[507, 10, 5, 17]`, B: `[1, 1, 5, 17]`).
+on NumPy, NumPy + Numba, and FORTRAN,  with [ILNumerics Accelerator](https://ilnumerics.net/ilnumerics-accelerator-compiler.html) on moderately sized data. (A: `[507, 10, 5, 17]`, B: `[1, 1, 5, 17]`).
 
 This benchmark involves broadcasting, unary and binary integer operations, and a sum-reduction and creates a plot, similar to this: 
 ![Part1.svg](Part1.svg) 
+Each sample in the plot gives the time needed for computing the expression, averaged over 10 repetitions. This 'current execution speed' is plotted for the first 10 seconds of the experiment and repeated for all execution technologies investigated. 
+
+Observed execution times for all experiments over the app's running time allow to compare not only the general efficiency of the individual optimization methods. It also allow to inspect the behavior of the method during start-up and in a steady run.
 
 ## Benchmark Structure
 All benchmarks are handled from `ILNumerics\Part1.csproj`. At runtime it starts the NumPy scripts (with and without Numba), starts the FORTRAN executables, and starts the ILNumerics .NET benchmarks. 

@@ -21,6 +21,14 @@ Both ways are executed, using
 
 Results are checked for correctness and compared with the manual iteration version using `Parallel.For`. 
 ![Part2a_1500x1500_rep10.svg](ILNumerics/Part2a_1500x1500_rep10.svg) 
+Each sample in the plot corresponds to executing the high-level expression (either unmodified or by iterating along a single dimension) for 10 times (`rep`) and to measuring the accumulated execution time. This measurement is than repeated until 10 seconds have past. Observed execution times for all experiments over the app's running time allow to compare not only the general efficiency of the optimization methods investigate. They also allow to inspect the behavior of the method during start-up and in a steady run.
+
+## Discussion
+The baseline version is given by the high-level expression, executed by regular ILNumerics Computing Engine - without applying the Accelerator. This experiment is labeled `ILNumerics vectorized` in the plot. Attempting to split up the data to perform looping iterations over one dimension of `A` causes slightly slower execution - as expected. This version is labeled `ILNumerics for loop` in the plot. 
+
+The ILNumerics Accelerator is able to speed this loop up and to run its iterations in parallel (`ILNumerics for loop, VP` in the plot). However, there is some overhead associated with the more fine grained parallelization in ILNumerics Accelerator. Thus, manual parallelization using `Parallel.For` for the data loop outperforms ILNumerics on this embarassingly simple parallelization example. This overhead is subject of ongoing improvement and will likely be decreased in a later version of ILNumerics. Further, the efficiency advantage of `Parallel.For` comes to the price of giving up sequential semantics of the loop iterations (see: [benchmark Part2b](../Part2b%20Loop%20Parallelization/Readme.md)) and it highly depends on the data size (see notes below).  
+
+The fastest result is produced by ILNumerics Accelarator when applied to the unmodified high-level expression - without attempting any manual parallelization. This experiment is labeled `ILNumerics vectorized, VP` in the plot. 
 
 ## Benchmark Structure
 All benchmarks are handled from `ILNumerics/Part2a.csproj`. At runtime the project starts the 5 benchmarks, measures execution times and creates a plot (bmp, svg) using measured results. 
@@ -52,7 +60,9 @@ Re-Running the project will only re-create the plots. To trigger a new *measurem
 
 
 ## Notes
-The size of A (1500 x 1500 double elements) is commonly large enough to justify manual parallelization (i.e.: it pays off to split the array and distribute to multiple cores). Such size was chosen, to make the comparison fair. ILNumerics Accelerator, however, does not so much depend on large-enough array data. Try to modify the benchmark to use much smaller data and see, how the advantage of splitting the data for manuel parallelization diminishes completely, while the speed-up by ILNumerics Accelerator on the abstract high-level expression is retained: 
+In a manual parallelization world the size of A (1500 x 1500 double elements) is commonly large enough to justify manual parallelization (i.e.: it pays off to split the array and distribute to multiple cores). Such size was chosen, to make the comparison fair. ILNumerics Accelerator, however, does *not* much depend on large-enough array data and it removes the need to manually split large data for manual parallelization.
+
+Try modifying the benchmark to use smaller data and see, how the advantage of splitting the data for manuel parallelization decreases / vanishes, while the speed-up by ILNumerics Accelerator on the abstract high-level expression is retained: 
 ![Part2a_200x200_rep500.svg](ILNumerics/Part2a_200x200_rep500.svg)
 
 ## Feedback

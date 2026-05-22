@@ -13,6 +13,7 @@ The parallelization method used by ILNumerics Accelerator on the other hand *doe
 
 This benchmark produces a plot, similar to this: 
 ![Part2b_1500x1500.svg](ILNumerics/Part2b_1500x1500.svg) 
+Each sample in the plot corresponds to executing the loop expression for 10 times and to measuring the averaged execution time. This measurement is than repeated until 10 seconds have past. Observed execution times for all experiments over the app's running time allow to compare not only the general efficiency of the optimization method under investigation. They also allow to inspect the behavior of the method during start-up and in a steady run.
 
 ## Discussion
 The baseline in the generated output plot is labeled `ILNumerics for loop`. It iterates the whole loop in pure sequential order, using traditional, synchronous ILNumerics array functions. It shows reasonable execution speed (after a slight initial CLR JIT phase). 
