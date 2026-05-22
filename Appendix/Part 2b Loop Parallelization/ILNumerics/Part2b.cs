@@ -8,14 +8,16 @@ using System.Runtime.InteropServices;
 using static ILNumerics.Globals;
 using static ILNumerics.ILMath;
 
-Array<double> A = counter<double>(1.0, 1.0, 1500, 1500);
-Array<double> CS = empty<double>(1, 1500);
-Array<double> CV = empty<double>(1, 1500);
-Array<double> D = empty<double>(1, 1500);
-Array<double> ES = empty<double>(1, 1500);
-Array<double> EV = empty<double>(1, 1500);
+const int AdimLen = 1500; // 200
+const int reps = 10;    // 100
+Array<double> A = counter<double>(1.0, 1.0, AdimLen, AdimLen);
+Array<double> CS = empty<double>(1, AdimLen);
+Array<double> CV = empty<double>(1, AdimLen);
+Array<double> D = empty<double>(1, AdimLen);
+Array<double> ES = empty<double>(1, AdimLen);
+Array<double> EV = empty<double>(1, AdimLen);
 
-const string PartName = "Part 2b";
+const string PartName = "Part2b";
 
 //ILN(enabled = false)
 void workload_ILN_Seq() {
@@ -36,7 +38,7 @@ void workload_ILN_Seq_VP() {
     }
 }
 //ILN(enabled = false)
-double run(Action func, int rep = 10, Func<BaseArray> awaitable = null) {
+double run(Action func, int rep = reps, Func<BaseArray> awaitable = null) {
 
     var sw = Stopwatch.StartNew();
     for (int i = 0; i < rep; i++) {
@@ -154,10 +156,14 @@ A: double[{A.S[0]},{A.S[1]}]
     var gdi = new GDIDriver(1500, 1000);
     gdi.Scene = scene;
     gdi.Render();
-    gdi.BackBuffer.SaveBitmap($"{PartName}.bmp");
+    var outFile = Path.GetFullPath($"{PartName}.bmp");
+    gdi.BackBuffer.SaveBitmap(outFile);
+    Console.Write($"File written: " + outFile);
 
-    using var outStream = new FileStream($"{PartName}.svg", FileMode.Create);
+    outFile = Path.GetFullPath($"{PartName}.svg");
+    using var outStream = new FileStream(outFile, FileMode.Create);
     new SVGDriver(outStream, 1500, 1000, scene: scene).Render();
+    Console.Write($"File written: " + outFile);
 
 }
 static string getSystemInfo() {

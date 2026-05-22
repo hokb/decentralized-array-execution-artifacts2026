@@ -56,5 +56,9 @@ The benchmark generates the following results and places them into a new folder:
 * All measured times (5 measurements)
 * Plots generated: Part1.bmp and Part1.svg
 
+* ## Repeating the experiment / Re-Run
+Re-Running the project will only re-create the plot. To trigger a new *measurement* just delete the `result` folder `Appendix\Part 1 Low Level Expressions\result\`.  
+
+
 ## Feedback
 Please let us know about your findings! Did you observe similar results ? Get in touch and have us take a look: [benchmarks@ilnumerics.net](benchmarks@ilnumerics.net)
