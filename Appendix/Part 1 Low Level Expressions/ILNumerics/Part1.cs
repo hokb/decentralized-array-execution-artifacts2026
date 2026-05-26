@@ -1,6 +1,7 @@
 ﻿using ILNumerics;
 using ILNumerics.Drawing;
 using ILNumerics.Drawing.Plotting;
+using ILNumerics.Licensing;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -9,6 +10,8 @@ using static ILNumerics.ILMath;
 //ILN(enabled = false)          // disable the VP Accelerator for now. It will be selectively enabled below.
 
 string measureDir = Path.Combine("..","..","..","..", "result");
+var ILNVersion = FileVersionInfo.GetVersionInfo(typeof(Array<>).Assembly.Location); 
+
 var measurements = new Measurement[] { 
     new Measurement{ Name = "NumPy NoOpt", Source =  Path.Combine("..", "..", "..", "..", "numpy","Part1_noopt.py"), TimesPath = "times_numpy_noopt.txt", ResultsPath= "results_numpy_noopt.bin", Separator = "," },
     new Measurement{ Name = "NumPy Opt", Source =  Path.Combine("..", "..", "..", "..", "numpy","Part1_opt.py"), TimesPath = "times_numpy_opt.txt", ResultsPath= "results_numpy_opt.bin", Separator = "," },
@@ -26,13 +29,18 @@ int elemCount = 507 * 5 * 17;
 // a cell array holds our measured times and results per experiment
 Cell samples = cell(size(2, measurements.Length));
 // ensure invariant number format (floating point char: '.') 
-System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture; 
+System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+
 // a global variable will be used for checking all experiments calculation results for identity.
 Array<uint> result = null; 
 
+// do we have to measure or can we use cached sampling results ? 
 if (!readMeasurements(samples)) {
     performMeasurements();
     readMeasurements(samples); 
+} else {
+    Console.WriteLine($"Recreating plots using cached measurement files. To trigger new measurements delete '/result' directory!");
+
 }
 Console.WriteLine($"Current Directory: " + Environment.CurrentDirectory);
 Console.WriteLine($"Measure Directory: " + Path.GetFullPath(measureDir));
@@ -82,7 +90,7 @@ draw(samples);
 }
 void performMeasurements() {
 
-    // measure numpy + FORTRAN ( overwriting existing measurement result files )
+    // measure numpy + FORTRAN ( overwriting existing measurement result files, if any)
     Settings.ArrayStyle = ArrayStyles.numpy;
     // create output measurement dir, if not exists
     if (!Directory.Exists(measureDir)) {
@@ -115,7 +123,7 @@ void performMeasurements() {
         }
     }
     Console.WriteLine("Segment invocations count: " + Segment.RunCount);
-    Console.WriteLine("ILNumerics Version: " + FileVersionInfo.GetVersionInfo(typeof(Array<>).Assembly.Location).FileVersion?.ToString());
+    Console.WriteLine("ILNumerics Version: " + ILNVersion?.ToString());
     
 }
 static string getSystemInfo() {
@@ -192,7 +200,6 @@ unsafe void measureILN(Measurement m) {
 void draw(InCell samples) {
 
     System.Console.WriteLine($"Size of samples cell: {samples.S.ToString()}"); 
-    System.Console.WriteLine($"Samples cell: {samples.ToString()}"); 
 
     Array<double> Numpy = samples.GetArray<double>(0, 0);
     Array<double> Numpy_numba = samples.GetArray<double>(0, 1);
@@ -204,16 +211,16 @@ void draw(InCell samples) {
 
     var allLabelFonts = new ILNumerics.Drawing.Compat.Font("Linux Libertine", 14.0f);
     Label.DefaultFont = allLabelFonts;
-    
+    var ILNVersStr = $"{ILNVersion.FileMajorPart}.{ILNVersion.FileMinorPart}"; 
     var scene = new Scene {
         new PlotCube(twoDMode: true) {
             new LinePlot(tosingle(Numpy).T, tag: "Numpy 2.0.2", markerStyle: MarkerStyle.Dot, lineColor: Color.Green, lineStyle: DashStyle.Dotted),
             new LinePlot(tosingle(fortran).T, tag: "FORTRAN gfort /Od",  markerStyle: MarkerStyle.TriangleUp, lineColor: Color.Blue, lineStyle: DashStyle.Dotted, markerColor: Color.Red),
             new LinePlot(tosingle(Numpy_numba).T, tag: "Numpy 2.0.2, numba 0.60.0, ", markerStyle: MarkerStyle.Dot, lineColor: Color.Green, lineStyle: DashStyle.Solid),
-            new LinePlot(tosingle(ILN_noAcc).T, tag: "ILNumerics, no optimization", markerStyle: MarkerStyle.Square, lineColor: Color.Black, lineStyle: DashStyle.Dotted),
+            new LinePlot(tosingle(ILN_noAcc).T, tag: $"ILNumerics {ILNVersStr}, (no Accel.)", markerStyle: MarkerStyle.Square, lineColor: Color.Black, lineStyle: DashStyle.Dotted),
             new LinePlot(tosingle(fortran_opt).T[full,r(0,2,end)], tag: "FORTRAN gfort /fast", markerStyle: MarkerStyle.TriangleUp, lineColor: Color.Blue, lineStyle: DashStyle.Solid, markerColor: Color.Red),
-            new LinePlot(tosingle(ILN_Acc).T[full,r(0,2,end)], tag: "ILNumerics, optimized", markerStyle: MarkerStyle.Square, lineColor: Color.Red, lineStyle: DashStyle.Solid),
-            new LinePlot(tosingle(ILN_AccBSDAll).T, tag: "ILNumerics, V7, optimized exp.", markerStyle: MarkerStyle.None, lineColor: Color.Black, lineStyle: DashStyle.Solid),
+            new LinePlot(tosingle(ILN_Acc).T[full,r(0,2,end)], tag: $"ILNumerics, Accel.{ILNVersStr}", markerStyle: MarkerStyle.Square, lineColor: Color.Red, lineStyle: DashStyle.Solid),
+            new LinePlot(tosingle(ILN_AccBSDAll).T, tag: $"ILNumerics, Accel.{ILNVersStr} (ext)", markerStyle: MarkerStyle.None, lineColor: Color.Black, lineStyle: DashStyle.Solid),
             new Group(scale: new Vector3(0.8, 0.8, 1)) {
                 new Legend() { Location = new PointF(.463f, .67f), Anchor = new PointF(1, .5f), Alpha = 0.9f }   // was: 0.9, .32
             }

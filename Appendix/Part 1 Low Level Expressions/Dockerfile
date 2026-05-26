@@ -1,19 +1,18 @@
 # Build stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0  
+FROM mcr.microsoft.com/dotnet/sdk:8.0  
 WORKDIR /Artefact1
 COPY FORTRAN ./FORTRAN/
 
 COPY numpy ./numpy/
 COPY ILNumerics/*.* ./ILNumerics/
-COPY ILNumerics/publish ./ILNumerics/publish/
 COPY ILNumerics/Properties ./ILNumerics/Properties/
 COPY ILNumerics/ILNumerics_deploy ./ILNumerics/ILNumerics_deploy/
 
-#WORKDIR /Artefact1/ILNumerics
-#
-#RUN dotnet restore Part1.csproj
-#RUN dotnet publish -c Release -o /Artefact1/ILNumerics/publish/Release/net8.0/ --no-restore
-#
+WORKDIR /Artefact1/ILNumerics
+
+RUN dotnet restore Part1.csproj
+RUN dotnet publish Part1.csproj -c Release -o /Artefact1/ILNumerics/publish/Release/net8.0/ --no-restore 
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends gfortran python3 python3-pip python3-venv build-essential libgdiplus && \
     rm -rf /var/lib/apt/lists/*
