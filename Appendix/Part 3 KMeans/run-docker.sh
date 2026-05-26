@@ -1,22 +1,28 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-IMAGE_NAME="artefact1:latest"
-CONTAINER_NAME="artefact1-run"
-OUT_DIR="$(pwd)/result"
+timestamp="$(date +"%Y-%m-%d_%H%M%S")"
+imageName="artefact3:${timestamp}"
+containerName="artefact3-${timestamp}"
+outDir="$(pwd)/result"
 
-mkdir -p "$OUT_DIR"
+mkdir -p "$outDir"
 
-echo "Building Docker image..."
-docker build -t "$IMAGE_NAME" .
+cleanup() {
+    echo "Cleaning up container and image..."
 
-echo "Removing old container if it exists..."
-docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
+    docker rm -f "$containerName" >/dev/null 2>&1 || true
+    docker rmi -f "$imageName" >/dev/null 2>&1 || true
 
-echo "Running container..."
-docker run --rm \
-  --name "$CONTAINER_NAME" \
-  -v "$OUT_DIR:/result" \
-  "$IMAGE_NAME"
+    echo "Done. Output files are in: $outDir"
+}
 
-echo "Done. Output files, if any, are in: $OUT_DIR"
+trap cleanup EXIT
+
+echo "Building Docker image: $imageName"
+docker build -t "$imageName" .
+
+echo "Running container: $containerName"
+docker run --name "$containerName" \
+    -v "${outDir}:/Artefact3/result" \
+    "$imageName"
