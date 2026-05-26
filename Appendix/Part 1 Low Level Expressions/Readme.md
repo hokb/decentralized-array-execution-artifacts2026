@@ -1,10 +1,16 @@
 # Artifact 1 - Low Level Expressions
 
-Compare execution speed of the low level expression 
+Compare the calculation performance of low level expressions, as:
 
 `sum((m0 & (A << shift)) | (~m0 & B), dim: 1)`
 
-on NumPy, NumPy + Numba, and FORTRAN,  with [ILNumerics Accelerator](https://ilnumerics.net/ilnumerics-accelerator-compiler.html) on moderately sized data. (A: `[507, 10, 5, 17]`, B: `[1, 1, 5, 17]`).
+on moderately sized data. (`A: [507, 10, 5, 17]`, `B: [1, 1, 5, 17]`),  
+when executed by: 
+* NumPy, 
+* NumPy + Numba,  
+* FORTRAN /O0 (optimization off), 
+* FORTRAN /O3 (all optimizations), with 
+* [ILNumerics Accelerator](https://ilnumerics.net/ilnumerics-accelerator-compiler.html).
 
 This benchmark involves broadcasting, unary and binary integer operations, and a sum-reduction and creates a plot, similar to this: 
 ![Part1.svg](Part1.svg) 

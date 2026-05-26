@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Part1", "Part 1 Low Level E
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Part3_noopt", "Part 3 KMeans\numpy\Part3_noopt\Part3_noopt.pyproj", "{77B04BE9-BF84-472D-AB03-91134C099538}"
 EndProject
-Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "Part3_KMeans", "Part 3 KMeans\FORTRAN\Part3_KMeans\Part3_KMeans.vfproj", "{B5076E2D-8943-B6D6-734A-2BAE5F735FE7}"
+Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "Part3_KMeans", "Part 3 KMeans\FORTRAN\Part3_KMeans.vfproj", "{B5076E2D-8943-B6D6-734A-2BAE5F735FE7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
