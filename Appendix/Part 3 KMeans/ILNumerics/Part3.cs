@@ -204,13 +204,15 @@ void draw() {
     // increase the font size for plotting
     var allLabelFonts = new ILNumerics.Drawing.Compat.Font("Linux Libertine", 13.0f);
     Label.DefaultFont = allLabelFonts;
+    var ILNVersion = FileVersionInfo.GetVersionInfo(typeof(Array<>).Assembly.Location);
+    var ILNVersStr = $"{ILNVersion.FileMajorPart}.{ILNVersion.FileMinorPart}.{ILNVersion.FileBuildPart}";
 
     var scene = new Scene {
         new PlotCube(twoDMode: true) {
-            new LinePlot(tosingle(times[times[full, 0] == 0, "1,2"]).T, tag: "ILNumerics  no  Accelerator ", lineWidth: 3, markerStyle: MarkerStyle.Dot, lineColor: Color.Black, lineStyle: DashStyle.Dashed),
+            new LinePlot(tosingle(times[times[full, 0] == 0, "1,2"]).T, tag: $"ILNumerics v{ILNVersStr}, no  Accelerator ", lineWidth: 3, markerStyle: MarkerStyle.Dot, lineColor: Color.Black, lineStyle: DashStyle.Dashed),
             new LinePlot(tosingle(times[times[full, 0] == 2, "1,2"]).T, tag: "numpy ", lineWidth: 3, markerStyle: MarkerStyle.TriangleUp, lineColor: Color.Green, lineStyle: DashStyle.Solid),
             new LinePlot(tosingle(times[times[full, 0] == 3, "1,2"]).T, tag: "FORTRAN /O3 optimization ", lineWidth: 3, markerStyle: MarkerStyle.Square, lineColor: Color.Blue, lineStyle: DashStyle.Solid),
-            new LinePlot(tosingle(times[times[full, 0] == 1, "1,2"]).T, tag: "ILNumerics  Accelerator ", lineWidth: 3, markerStyle: MarkerStyle.Dot, lineColor: Color.Red, lineStyle: DashStyle.Solid),
+            new LinePlot(tosingle(times[times[full, 0] == 1, "1,2"]).T, tag: $"ILNumerics Accelerator v{ILNVersStr} ", lineWidth: 3, markerStyle: MarkerStyle.Dot, lineColor: Color.Red, lineStyle: DashStyle.Solid),
             new Legend() {
                 Location = new PointF(.9f, .46f), Anchor = new PointF(1, .5f)
             }
