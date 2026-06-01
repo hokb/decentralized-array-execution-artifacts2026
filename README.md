@@ -1,8 +1,8 @@
 # ILNumerics Accelerator (.NET) - Benchmarks and Artifacts 2026
-This repository collects performance benchmarks for the [ILNumerics Accelerator JIT compiler](https://ilnumerics.net/ilnumerics-accelerator-compiler.html) for high-performance numerical array algorithm codes on .NET. 
-In the current state the benchmarks represent artifacts for the 2026' arxiv paper published by [ILNumerics GmbH](https://ilnumerics.net). It will subsequently be extended with more and updated benchmarks as ILNumerics Accelerator evolves. 
+This repository collects performance benchmarks for the [ILNumerics Accelerator JIT compiler](https://ilnumerics.net/ilnumerics-accelerator-compiler.html). This compilier is the driving force behind high-performance numerical array code optimizations for the [ILNumerics](https://ilnumerics.net) numerical application development platform on .NET.
+In the current state (May 2026) the benchmarks represent artifacts for the 2026 paper ["A Virtual Processor brings back the Free Lunch"](http://arxiv.org/abs/2605.30507) published by [ILNumerics GmbH](https://ilnumerics.net), using ILNumerics version 7.4. It will subsequently be extended with more and updated benchmarks as ILNumerics Accelerator evolves. 
 
-Each benchmark can be downloaded and reproduced locally. Docker images / build scripts are provided where applicable. 
+Each benchmark can be downloaded and reproduced locally. Docker images / build scripts are provided where suitable. 
 
 ## Content
 <table style="border:solid black 0px">
