@@ -39,17 +39,14 @@ Demonstrates strong-scaling capabilities by [ILNumerics Accelerator (.NET)](http
   <tr>
     <td width="55%" valign="top">
 
-### [Part 3 - ILNumerics Accelerator vers. *Invalid* `Parallel.For`](https://github.com/hokb/decentralized-array-execution-artifacts2026/tree/main/Appendix/Part%203%20KMeans)
-ILNumerics Accelerator performs strong scaling on the iterative K-Means algorithm.  
+### [Part 3 - Strong Scaling the K-Means Algorithm`](https://github.com/hokb/decentralized-array-execution-artifacts2026/tree/main/Appendix/Part%203%20KMeans)
+[ILNumerics Accelerator (.NET)](https://ilnumerics.net/ilnumerics-accelerator-compiler.html) performs strong scaling on the iterative K-Means algorithm and beats FORTRAN by factor 3.  
 </td>
     <td width="45%" valign="top" style="border:dashed brown 2px">
 <img src="https://raw.githubusercontent.com/hokb/decentralized-array-execution-artifacts2026/refs/heads/main/Appendix/Part%203%20KMeans/Part3.svg" alt="Array expression performance on NumPy, FORTRAN and ILNumerics" width="100%">
 </td>
   </tr>
 </table>
-
-
-|| |
 
 
 
