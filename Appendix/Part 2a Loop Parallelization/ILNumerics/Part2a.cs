@@ -32,7 +32,7 @@ void workload_ILN_Seq() {
 void workload_ILN_Vect() {
     CV = sum(abs(sin(A)), dim: 0);
 }
-void workload_ParFor() { 
+void workload_ParFor() {  
 
     Parallel.For(0, A.S[1], i => {
         D[i] = sum(abs(sin(A[full, i])), dim: 0);

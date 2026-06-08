@@ -19,7 +19,7 @@ var measurements = new Measurement[] {
     new Measurement{ Name = "FORTRAN Opt", Source =  Path.Combine("..", "..", "..", "..","FORTRAN", "Part1_F90_optim"), TimesPath = "times_fortran_opt.txt", ResultsPath= "results_fortran_opt.bin", Separator = "      " },
     new Measurement{ Name = "ILNumerics NoOpt", Source =  "", TimesPath = "timess_iln_noopt.txt",ResultsPath= "results_iln_noopt.bin", Separator = ","},
     new Measurement{ Name = "ILNumerics Opt", Source =  "", TimesPath = "times_iln_opt.txt", ResultsPath= "results_iln_opt.bin", Separator = ","},
-    new Measurement{ Name = "ILNumerics OptExp", Source =  "", TimesPath = "times_iln_optexp.txt", ResultsPath= "results_iln_optexp.bin", Separator = "," }
+    //new Measurement{ Name = "ILNumerics OptExp", Source =  "", TimesPath = "times_iln_optexp.txt", ResultsPath= "results_iln_optexp.bin", Separator = "," }
 };
 
 const uint m0 = 1142251548;      // some variables to be used in our expression measurements
@@ -146,9 +146,9 @@ static string GetLinuxProcessorName() {
 unsafe void measureILN(Measurement m) {
 
     if (m.Name.EndsWith(" OptExp")) {
-        Segment.Default.SpecializeFlags = ILNumerics.Core.Segments.SpecializeFlags.BSDsAll; // <- experimental optimization feature
+        Segment.Default.SpecializeFlags = ILNumerics.Core.Segments.SpecializeFlags.Level1; // <- experimental optimization feature
     } else {
-        Segment.Default.SpecializeFlags = ILNumerics.Core.Segments.SpecializeFlags.None; // default for "standard" optimization
+        Segment.Default.SpecializeFlags = null; // default for "standard" optimization: auto specialization of hot paths
     }
 
     Settings.ArrayStyle = ArrayStyles.numpy;
@@ -207,7 +207,7 @@ void draw(InCell samples) {
     Array<double> fortran_opt = samples.GetArray<double>(0, 3);
     Array<double> ILN_noAcc = samples.GetArray<double>(0, 4); 
     Array<double> ILN_Acc = samples.GetArray<double>(0, 5);
-    Array<double> ILN_AccBSDAll = samples.GetArray<double>(0, 6);
+    //Array<double> ILN_AccBSDAll = samples.GetArray<double>(0, 6);
 
     var allLabelFonts = new ILNumerics.Drawing.Compat.Font("Linux Libertine", 14.0f);
     Label.DefaultFont = allLabelFonts;
@@ -220,7 +220,7 @@ void draw(InCell samples) {
             new LinePlot(tosingle(ILN_noAcc).T, tag: $"ILNumerics {ILNVersStr}, (no Accel.)", markerStyle: MarkerStyle.Square, lineColor: Color.Black, lineStyle: DashStyle.Dotted),
             new LinePlot(tosingle(fortran_opt).T[full,r(0,2,end)], tag: "FORTRAN gfort /fast", markerStyle: MarkerStyle.TriangleUp, lineColor: Color.Blue, lineStyle: DashStyle.Solid, markerColor: Color.Red),
             new LinePlot(tosingle(ILN_Acc).T[full,r(0,2,end)], tag: $"ILNumerics, Accel.{ILNVersStr}", markerStyle: MarkerStyle.Square, lineColor: Color.Red, lineStyle: DashStyle.Solid),
-            new LinePlot(tosingle(ILN_AccBSDAll).T, tag: $"ILNumerics, Accel.{ILNVersStr} (ext)", markerStyle: MarkerStyle.None, lineColor: Color.Black, lineStyle: DashStyle.Solid),
+            //new LinePlot(tosingle(ILN_AccBSDAll).T, tag: $"ILNumerics, Accel.{ILNVersStr} (ext)", markerStyle: MarkerStyle.None, lineColor: Color.Black, lineStyle: DashStyle.Solid),
             new Group(scale: new Vector3(0.8, 0.8, 1)) {
                 new Legend() { Location = new PointF(.463f, .67f), Anchor = new PointF(1, .5f), Alpha = 0.9f }   // was: 0.9, .32
             }
